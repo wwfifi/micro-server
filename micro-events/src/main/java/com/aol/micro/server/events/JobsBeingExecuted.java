@@ -1,6 +1,7 @@
 package com.aol.micro.server.events;
 
-import javax.annotation.Resource;
+import java.util.Optional;
+
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 
@@ -11,7 +12,6 @@ import lombok.Getter;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -30,7 +30,7 @@ public class JobsBeingExecuted {
 	
 	private final int maxLoggingCapacity;
 	
-	@Autowired
+	
 	public JobsBeingExecuted(@Qualifier("microserverEventBus") EventBus bus,  
 			@Value("${system.logging.max.per.hour:10}") int maxLoggingCapacity) {
 		this.eventBus = bus;
@@ -65,12 +65,15 @@ public class JobsBeingExecuted {
 	private Object executeScheduledJob(final ProceedingJoinPoint pjp, final String type) throws Throwable {
 		addTypeToStatCounter(type);
 		JobExecutingData data = new JobExecutingData(type, statCounter.count(type));
-		events.active(buildId(type, data.getProcessingThread()), data);
+		String id = buildId(type, data.getProcessingThread());
+		events.active(id, data);
 
 	
 		SystemData retVal = null;
 		try {
-			retVal = (SystemData) pjp.proceed();
+			retVal = Optional.ofNullable(((SystemData) pjp.proceed()))
+							.map(sd ->sd.withCorrelationId(id))
+							.orElse(null);
 			return retVal;
 		} finally {
 			logSystemEvent(pjp, type, data, retVal);

@@ -1,27 +1,27 @@
 # Application / Service Registry Client Plugin
 
-[micro-application-registry example apps](https://github.com/aol/micro-server/tree/master/micro-application-registry/src/test/java/app)
+[micro-application-register example apps](https://github.com/aol/micro-server/tree/master/micro-application-register/src/test/java/app)
 
 This plugin turns any service into a Service Registry client (and optionally server). A scheduled job will run at configurable intervals (default is every 5 minutes) and post some info on the instance to the Service Registry server (url also configurable). The server will persist data on active services to a configurable location.
 
 ## To use
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-application-registry/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-application-registry)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-application-register/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-application-register)
 
-Simply add to the classpath
+Simply add this plugin to the classpath on your Microserver app.
 
 Maven 
-
+```xml
      <dependency>
         <groupId>com.aol.microservices</groupId>  
         <artifactId>micro-application-registry</artifactId>
         <version>x.yz</version>
      </dependency>
-     
+```    
 Gradle
-
+```groovy
     compile 'com.aol.microservices:micro-application-registry:x.yz'
-
+```
 ## Depends on
 
     micro-client
@@ -29,7 +29,7 @@ Gradle
 
 Import this plugin to add ServiceRegistry functionality, Rest Resource available on
 
-/app-path/service-registry
+    /app-path/service-registry
 
 Functionality
 
@@ -46,3 +46,22 @@ Functionality
     service.registry.entry.max.live:43200000
     service.registry.dir:java.io.tmpdir/services
     service.registry.url: url to register services on (http://hostname:port/context)
+    
+### Configure a custom host address
+
+Use the property, host.address to set the host address (otherwise InetAddress.getLocalHost().getHostName() is used, which may cause some problems when using containers).
+
+	host.address=custom.host.addrress
+
+### Use caller ip
+
+To configure the application register to use the callers ip (rather than the senders hostname), the sender should configure host.address as follows 
+
+	host.address=use-ip
+
+	
+### Configure a target address (e.g. a VIP or load balancer)
+
+Use the property target.endpoint to define an end point which should be used to communicate with the service being registered
+
+     target.endpoint=https://www.myendpoint.com/api	

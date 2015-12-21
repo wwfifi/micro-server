@@ -7,15 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.experimental.Builder;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 
 import com.google.common.eventbus.EventBus;
 import com.google.common.eventbus.Subscribe;
 
-@Component
+
 public class RequestsBeingExecuted<T> {
 
 	private final EventBus bus;
@@ -23,7 +20,7 @@ public class RequestsBeingExecuted<T> {
 	@Getter
 	private final String type;
 	
-	@Autowired
+	
 	public RequestsBeingExecuted(@Qualifier("microserverEventBus") EventBus bus,  boolean queryCapture){
 		this.bus = bus;
 		this.type = "default";
@@ -67,7 +64,7 @@ public class RequestsBeingExecuted<T> {
 	
 
 	private String buildId(RequestData data) {
-		String id =  data.correlationId+ "-"+data.getProcessingThread();
+		String id =  ""+data.correlationId;
 		return id;
 	}
 	

@@ -25,10 +25,13 @@ import com.aol.micro.server.PluginLoader;
 import com.aol.micro.server.auto.discovery.Rest;
 import com.aol.micro.server.auto.discovery.RestResource;
 import com.aol.micro.server.config.Classes;
-import com.aol.micro.server.rest.jackson.JacksonFeature;
 import com.aol.micro.server.servers.model.ServerData;
 
 public interface Module {
+	
+	default Map<String, Object> getServerProperties() {		
+		return new HashMap<>();		
+	}
 	
 	default <T> Consumer<WebServerProvider<T>> getServerConfigManager(){
 		return server->{};
@@ -66,7 +69,6 @@ public interface Module {
 	
 	default List<Class> getDefaultResources(){
 		List list = new ArrayList<>();
-		list.add(JacksonFeature.class);
 		list.addAll(SequenceM.fromStream(PluginLoader.INSTANCE.plugins.get().stream())
 				.filter(module -> module.servletContextListeners()!=null)
 				.flatMapCollection(Plugin::jaxRsResources)

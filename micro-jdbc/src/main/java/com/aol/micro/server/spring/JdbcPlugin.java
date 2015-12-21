@@ -10,7 +10,6 @@ import javax.servlet.ServletContextListener;
 
 import com.aol.micro.server.Plugin;
 import com.aol.micro.server.servers.model.ServerData;
-import com.aol.micro.server.spring.datasource.DataDataSourceBuilder;
 import com.aol.micro.server.spring.datasource.JdbcConfig;
 import com.aol.micro.server.spring.datasource.jdbc.SQL;
 
@@ -32,7 +31,7 @@ public class JdbcPlugin implements Plugin {
 
 	@Override
 	public Set<Class> springClasses() {
-		return new HashSet<>(Arrays.asList(JdbcConfig.class, DataDataSourceBuilder.class, SQL.class));
+		return new HashSet<>(Arrays.asList(JdbcConfig.class, SQL.class));
 	}
 
 	@Override

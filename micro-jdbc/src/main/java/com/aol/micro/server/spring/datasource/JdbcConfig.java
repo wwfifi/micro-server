@@ -2,8 +2,8 @@ package com.aol.micro.server.spring.datasource;
 
 import java.util.Properties;
 
-import lombok.experimental.Builder;
 import lombok.Getter;
+import lombok.experimental.Builder;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -53,12 +53,10 @@ public class JdbcConfig {
 		this.showSql = UsefulStaticMethods.either(showSql, extract("connection.showsql"));
 		this.dialect = UsefulStaticMethods.either(dialect, extract("connection.dialect"));
 		this.ddlAuto = UsefulStaticMethods.either(ddlAuto, extract("connection.ddl.auto"));
-		this.generateDdl = UsefulStaticMethods.either(generateDdl, extract("connection.generate.ddl"));
-
+		this.generateDdl = UsefulStaticMethods.either(generateDdl, extract("connection.generate.ddl"));		
 	}
 
 	private String extract(String suffix) {
-
 		return properties.getProperty(name + "." + suffix);
 	}
 

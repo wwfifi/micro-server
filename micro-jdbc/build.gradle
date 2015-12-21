@@ -2,14 +2,12 @@ description = 'micro-jdbc'
 dependencies {
 	compile 'org.springframework.data:spring-data-jpa:'+springDataJPA
 	compile group: 'org.springframework', name: 'spring-jdbc', version:"${springVersion}"
-	compile group: 'org.springframework', name: 'spring-orm', version:"${springVersion}"
 
 	
-	compile 'com.zaxxer:HikariCP:2.4.0'
 	compile project(':micro-core')
 	testCompile project(':micro-client')
 	testCompile project(':micro-grizzly')
-	testCompile project(':micro-jersey')
+	testCompile project(':micro-jersey')	
 	testCompile group: 'org.hsqldb', name:'hsqldb', version:'2.0.0'
 }
 
