@@ -1,4 +1,4 @@
-package com.aol.micro.server.log4j.rest;
+package app.level.setter;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertThat;
@@ -12,14 +12,14 @@ import com.aol.micro.server.config.Microserver;
 import com.aol.micro.server.testing.RestAgent;
 
 @Microserver(properties = { "log4j.root.logger.checker.active", "false" })
-public class Log4jRootLoggerRunnerTest {
+public class LogbackRootLoggerRunnerTest {
 
 	RestAgent rest = new RestAgent();
 	MicroserverApp server;
 
 	@Before
 	public void startServer() {
-		server = new MicroserverApp(() -> "log4j");
+		server = new MicroserverApp(() -> "logback");
 		server.start();
 	}
 
@@ -30,7 +30,7 @@ public class Log4jRootLoggerRunnerTest {
 
 	@Test
 	public void testChangeToWarn() {
-		assertThat(rest.get("http://localhost:8080/log4j/log4j/rootlogger/change/to/warn"), is("WARN"));
+		assertThat(rest.get("http://localhost:8080/logback/logback/rootlogger/change/to/warn"), is("WARN"));
 	}
 	
 

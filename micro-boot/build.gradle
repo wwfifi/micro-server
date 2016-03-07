@@ -7,7 +7,7 @@ dependencies {
 	compile project(':micro-core')
 	testCompile group: 'com.google.guava', name: 'guava', version:'18.0'
 
-        testCompile project(':micro-jackson-configuration')	
+    testCompile project(':micro-jackson-configuration')	
 	testCompile project(':micro-grizzly')
 	testCompile project(':micro-swagger')
 	testCompile project(':micro-client')

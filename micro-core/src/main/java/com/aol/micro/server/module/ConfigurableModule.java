@@ -5,6 +5,7 @@ import static com.aol.micro.server.utility.UsefulStaticMethods.concat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -23,6 +24,7 @@ import lombok.experimental.Wither;
 import org.pcollections.ConsPStack;
 import org.pcollections.HashTreePSet;
 
+import com.aol.micro.server.auto.discovery.CommonRestResource;
 import com.aol.micro.server.servers.model.ServerData;
 import com.aol.micro.server.utility.HashMapBuilder;
 
@@ -47,18 +49,21 @@ public class ConfigurableModule implements Module{
 	private final List<String> defaultJaxRsPackages;
 	private final Consumer<WebServerProvider<?>> serverConfigManager;
 	private final Consumer<JaxRsProvider<?>> resourceConfigManager;
+	private final Map<String, Object> serverProperties;
 	final boolean resetAll;
 	
 	
 	public <T> ConfigurableModule withResourceConfigManager(Consumer<JaxRsProvider<T>> resourceConfigManager){
 		return new ConfigurableModule(restResourceClasses,restAnnotationClasses, defaultResources,
 				listeners, requestListeners,filters,servlets, jaxWsRsApplication,providers,
-				context, springConfigurationClasses, propertyOverrides,defaultJaxRsPackages,serverConfigManager,(Consumer)resourceConfigManager,resetAll);
+				context, springConfigurationClasses, propertyOverrides,defaultJaxRsPackages,serverConfigManager,
+				(Consumer)resourceConfigManager,serverProperties, resetAll);
 	}
 	public <T> ConfigurableModule withServerConfigManager(Consumer<WebServerProvider<?>> serverConfigManager){
 		return new ConfigurableModule(restResourceClasses,restAnnotationClasses, defaultResources,
 				listeners, requestListeners,filters,servlets, jaxWsRsApplication,providers,
-				context, springConfigurationClasses, propertyOverrides,defaultJaxRsPackages,(Consumer)serverConfigManager,resourceConfigManager,resetAll);
+				context, springConfigurationClasses, propertyOverrides,defaultJaxRsPackages,
+				(Consumer)serverConfigManager,resourceConfigManager, serverProperties, resetAll);
 	}
 	
 	@Override
@@ -96,7 +101,7 @@ public class ConfigurableModule implements Module{
 	@Override
 	public List<Class> getRestResourceClasses() {
 		if(restResourceClasses!=null)
-			return  ConsPStack.from(concat(restResourceClasses, extract(() -> Module.super.getRestResourceClasses())));
+			return  ConsPStack.from(concat(restResourceClasses, extract(() -> Collections.singletonList(CommonRestResource.class))));
 		
 		return Module.super.getRestResourceClasses();
 	}
@@ -179,7 +184,14 @@ public class ConfigurableModule implements Module{
 		return Module.super.getSpringConfigurationClasses();
 	}
 
-	
+	@Override
+	public Map<String, Object> getServerProperties() {	
+		if(serverProperties != null) {
+			return HashMapBuilder.from(serverProperties).putAll(extractMap(() -> Module.super.getServerProperties())).build();
+		} else {
+			return Module.super.getServerProperties();
+		}
+	}
 
 	
 }
