@@ -22,16 +22,16 @@ import com.aol.micro.server.module.ConfigurableModule;
 
 import jersey.repackaged.com.google.common.collect.ImmutableMap;
 
-@Microserver
+@Microserver(entityScan = "com.aol.micro.server.alivehandler")
 public class AliveHandlerControllerTest {
 	private MicroserverApp server;
 
 	@Before
 	public void startServer() throws InterruptedException {
 		server = new MicroserverApp(()->"simple-app");
-				
 		Thread.sleep(1000);
-		server.start();
+        server.start();
+		
 	}
 	
 	@After
