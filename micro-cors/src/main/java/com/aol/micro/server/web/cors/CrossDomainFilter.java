@@ -16,24 +16,12 @@ import org.springframework.stereotype.Component;
 
 import com.aol.micro.server.auto.discovery.FilterConfiguration;
 
-@Component(value = "crossDomainFilter")
-public class CrossDomainFilter implements Filter, FilterConfiguration {
+import lombok.AllArgsConstructor;
 
-	private final  boolean simple;
-	@Autowired
-	public CrossDomainFilter(@Value("${cors.simple:false}")boolean simple){
-		this.simple=simple;
-	}
-	public CrossDomainFilter(){
-		simple=true;
-	}
-	@Override
-	public String[] getMapping() {
-		if(simple)
-			return new String[] { "/*" };
-		else
-			return new String[0];
-	}
+
+public class CrossDomainFilter implements Filter {
+
+	
 
 	@Override
 	public void init(FilterConfig filterConfig) throws ServletException {

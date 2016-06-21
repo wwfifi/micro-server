@@ -1,18 +1,18 @@
 package com.aol.micro.server.spring.boot;
 
+import java.util.Map;
 import java.util.function.Function;
 
 import javax.ws.rs.core.FeatureContext;
 
 import org.glassfish.jersey.CommonProperties;
 
-import com.aol.cyclops.data.collections.HashMaps;
 import com.aol.cyclops.data.collections.extensions.persistent.PMapX;
 import com.aol.cyclops.data.collections.extensions.persistent.PSetX;
+import com.aol.cyclops.data.collections.extensions.standard.MapXs;
 import com.aol.micro.server.Plugin;
-import com.aol.micro.server.rest.jersey.JerseyRestApplication;
+import com.aol.micro.server.rest.jersey.SpringBootJerseyRestApplication;
 import com.aol.micro.server.spring.SpringBuilder;
-import com.aol.micro.server.spring.boot.web.DelegatingContextListener;
 
 /**
  * 
@@ -31,13 +31,13 @@ public class BootPlugin implements Plugin{
 
 	@Override
 	public PSetX<Class> springClasses() {
-		return PSetX.of(JerseyRestApplication.class,DelegatingContextListener.class);
+		return PSetX.of(SpringBootJerseyRestApplication.class);
 	}
 
 	
 	@Override
-	public Function<FeatureContext,PMapX<String,Object>> jacksonFeatureProperties(){
-		return context->PMapX.fromMap(HashMaps.of(  CommonProperties.MOXY_JSON_FEATURE_DISABLE + '.'
+	public Function<FeatureContext,Map<String,Object>> jacksonFeatureProperties(){
+		return context->PMapX.fromMap(MapXs.of(  CommonProperties.MOXY_JSON_FEATURE_DISABLE + '.'
                 + context.getConfiguration().getRuntimeType().name().toLowerCase(),true));
 	}
 	

@@ -5,6 +5,15 @@
 
 A convenient modular engine for Microservices. Microserver plugins offer seamless integration with Spring (core), Jersey, Guava, Tomcat, Grizzly, reactive programming, Hibernate (& Spring Data), Spring Boot, Codahale Metrics, Swagger and more to come!
 
+* [Microserver screencast : getting started with plugins](https://www.youtube.com/watch?v=sYn2cVTkfcM)
+
+![screen shot 2016-05-06 at 12 30 26 pm](https://cloud.githubusercontent.com/assets/9964792/15588807/8da91440-2387-11e6-979b-f24d456541f5.png)
+
+### Microsever plugins video
+[![Getting started video](https://cloud.githubusercontent.com/assets/9964792/6361863/9991c50c-bc7e-11e4-8d28-746b0b87b1da.png)](https://youtu.be/sYn2cVTkfcM)
+
+
+
 ## Quick start
 
 Install Microserver with Grizzly, Jackson and Jersey (Gradle config below)
@@ -37,6 +46,12 @@ See the response  *hello world!*
 
 Add plugins by adding them to your build file - rerun the app to get new end points, Spring beans and more!
 
+# Why Microserver?
+
+Microserver is a plugin engine for building Spring and Spring Boot based microservices. Microserver supports pure microservice and micro-monolith development styles. The micro-monolith style involves packaging multiple services into a single deployment - offering developers the productivity of microservice development without the operational risk. This can help teams adopt a Microservices architecture on projects that are currently monoliths.
+
+Microserver plugins are orthogonal to Microservices. They solve a common problem in Microservice development where by services are broken up and deployed separately but code remains entangled in a monolithic common library. By making use of a plugin system that follows the same modular archictectural principals as microservice development, teams can keep cross-service concerns and infrastructure in properly size, coherent and cohesive plugin modules.
+
 # Tutorial and overview
 
 [Tutorial](https://github.com/aol/micro-server/wiki/Getting-started-:-Tutorial) 
@@ -44,7 +59,7 @@ Add plugins by adding them to your build file - rerun the app to get new end poi
 [Tutoiral code](https://github.com/aol/micro-server/tree/master/micro-tutorial)
 
 ## Note on Fat Jars
-Microserver (& Cyclops) have a plugin architecture and make use of the Java Service Laoder mechanism. Make sure your Far Jar implementation is configured to aggreagate services. With the Gradle Shadow Jar you do this with
+Microserver (& Cyclops) have a plugin architecture and make use of the Java Service Laoder mechanism. Make sure your Fat Jar implementation is configured to aggreagate services. With the Gradle Shadow Jar you do this with
  ```groovy
     shadowJar {
       mergeServiceFiles()  
@@ -74,8 +89,10 @@ Microserver is a zero configuration, standards based, battle hardened library to
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-tomcat-with-jersey/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-tomcat-with-jersey)
 * micro-core 
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-core/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-core)
-* micro-boot 
+* micro-boot  : Microserver driving Spring Boot
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-boot/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-boot)
+* micro-spring-boot  : Spring Boot driving Microserver
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-spring-boot/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.aol.microservices/micro-spring-boot)
 
 
 ##Info
@@ -108,7 +125,7 @@ Microserver Spring Boot
  ```xml
     <dependency>
       <groupId>com.aol.microservices</groupId>
-      <artifactId>micro-boot</artifactId>
+      <artifactId>micro-spring-boot</artifactId>
       <version>x.yz</version>
     </dependency>
  ```
@@ -122,7 +139,7 @@ Microserver core
  ```	 
 Microserver Spring Boot 
  ```groovy	 
-	  compile group: 'com.aol.microservices', name:'micro-boot', version:'x.yz'
+	  compile group: 'com.aol.microservices', name:'micro-spring-boot', version:'x.yz'
  ```
 ##Tech Stack
 
@@ -178,9 +195,11 @@ If you find you need configuration options for your application you have two opt
 
 The core of Microserver is a Spring 4.x Dependency Injection container which is used to store all the main classes of your Microservice (s). The Spring Dependency Injection container can be configured by the @Microservice Annotation on your main class, or by the Config object (optionally passed as a parameter to startup).
 
-Each Microservice is a Jersey REST Application. Multiple Microservices can run on the same server, by adding them to the classpath at runtime. They share a common Spring Dependency Injection container (as they are smaller services, we feel it makes sense to share resources such as ThreadPools, Datasources etc), but act as totally separate Rest applications. 
+### Micro-monolith Architectural Overview
 
-When creating embedded Microservices (multiple services colocated on the same JVM and Spring container), development project should be independent, but the colocated instances should be tested as they will be depolyed in production. There will be more info to follow on the wiki, on how and why we have implemented and scaled this pattern (the goal is to achieve both the benefits of a full Microservice architecture, but minimise the costs as articulated by Robert (Uncle Bob) C. Martin and others - e.g. [here: Microservices and Jars](http://blog.cleancoder.com/uncle-bob/2014/09/19/MicroServicesAndJars.html) .
+Each Microservice is a Jersey REST Application, these can deployed independently as pure Microservices or together as a micro-monolith. Multiple Microservices can run on the same server, by adding them to the classpath at runtime. They share a common Spring Dependency Injection container (as they are smaller services, we feel it makes sense to share resources such as ThreadPools, Datasources etc), but act as totally separate Rest applications. 
+
+When creating embedded Microservices (multiple services colocated on the same JVM and Spring container), the development project should be independent, but the colocated instances should be tested as they will be depolyed in production. There will be more info to follow on the wiki, on how and why we have implemented and scaled this pattern (the goal is to achieve both the benefits of a full Microservice architecture, but minimise the costs as articulated by Robert (Uncle Bob) C. Martin and others - e.g. [here: Microservices and Jars](http://blog.cleancoder.com/uncle-bob/2014/09/19/MicroServicesAndJars.html) .
 
 Jersey REST Applications are configured by the Module interface (at least one of which must be specified on startup).
 
@@ -203,6 +222,7 @@ e.g.
 ####Configurable Options
 
 Module provides the following default methods, that clients can override
+
  ```java
     default Map<String,String> getPropertyOverrides(){
 		return Maps.newHashMap();
@@ -275,7 +295,7 @@ Microserver application properties loading is configured by the class PropertyFi
 
 ##Embed and colocate Microservices
 
-Microserver supports the embedding of multiple microservices within a single Microserver. All Microservices will share a single Spring context, so some care needs to be taken when authoring such Microservices to avoid conflicts. This does mean that they can share resources (such as database connections) where it makes sense to do so.
+Microserver supports the embedding of multiple microservices within a single Microserver, this is not the default mode of operation and involves a little more work to setup. All Microservices will share a single Spring context, so some care needs to be taken when authoring such Microservices to avoid conflicts. This does mean that they can share resources (such as database connections) where it makes sense to do so.
 
 Embedded microservices should be collated at '''runtime only'''. There should be no compile time dependency between embedded microservices (otherwise you are not building microservices but a monolithc application).
 
