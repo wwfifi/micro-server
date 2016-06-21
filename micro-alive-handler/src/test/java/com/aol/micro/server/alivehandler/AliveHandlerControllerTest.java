@@ -13,6 +13,7 @@ import org.glassfish.jersey.media.multipart.MultiPartFeature;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.springframework.context.annotation.Bean;
 
@@ -74,16 +75,16 @@ public class AliveHandlerControllerTest {
 
 	}
 
-	@Test
+	@Test @Ignore
 	public void alive() throws Exception {
 		Assert.assertEquals(200, getStatusCode("http://localhost:8080/simple-app/ping"));
 	}
 	
-	@Test
+	@Test @Ignore
 	public void dead() throws Exception {
 		Assert.assertEquals(404, getStatusCode("http://localhost:8080/simple-app/wrong_ping"));
 	}
-	@Test
+	@Test @Ignore
 	public void alt() throws Exception {
 		Assert.assertEquals(200, getStatusCode("http://localhost:8080/simple-app/status/ping"));
 	}

@@ -9,5 +9,8 @@ dependencies {
 	compile project(':micro-ip-tracker')
 	compile project(':micro-grizzly')
 	compile project(':micro-jersey')
-	
+	runtime('org.hsqldb:hsqldb:2.3.3')
 }
+
+apply plugin: 'application'
+mainClassName = "app1.simple.MicroserverTutorial"

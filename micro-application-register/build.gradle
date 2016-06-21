@@ -8,6 +8,7 @@ dependencies {
 	compile project(':micro-ip-tracker')
 	testCompile project(':micro-grizzly-with-jersey')
 	testCompile group: 'org.hamcrest', name: 'hamcrest-all', version:hamcrestVersion
+    
 }
 
 modifyPom {
