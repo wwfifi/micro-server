@@ -26,7 +26,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.aol.cyclops.util.ExceptionSoftener;
-import com.aol.micro.server.ErrorCode;
+import com.aol.micro.server.InternalErrorCode;
 import com.aol.micro.server.config.SSLProperties;
 import com.aol.micro.server.module.WebServerProvider;
 import com.aol.micro.server.servers.AccessLogLocationBean;
@@ -49,16 +49,13 @@ public class TomcatApplication implements ServerApplication {
 	private final PStack<ServletData> servletData;
 	private final PStack<ServletContextListener> servletContextListenerData;
 	private final PStack<ServletRequestListener> servletRequestListenerData;
-	@Wither
-	private final SSLProperties SSLProperties;
-
+	
 	public TomcatApplication(AllData serverData) {
 		this.serverData = serverData.getServerData();
 		this.filterData = serverData.getFilterDataList();
 		this.servletData = serverData.getServletDataList();
 		this.servletContextListenerData = serverData.getServletContextListeners();
-		this.servletRequestListenerData = serverData.getServletRequestListeners();
-		this.SSLProperties = null;
+		this.servletRequestListenerData = serverData.getServletRequestListeners();	
 	}
 
 	public void run(CompletableFuture start,  JaxRsServletConfigurer jaxRsConfigurer, CompletableFuture end) {
@@ -74,23 +71,19 @@ public class TomcatApplication implements ServerApplication {
 	
 		serverData.getModule().getServerConfigManager().accept(new WebServerProvider(tomcat));
 		
-		if(SSLProperties!=null){
-			addSSL(tomcat.getConnector(),SSLProperties);	
-		}
+		addSSL(tomcat.getConnector());	
 
-		startServer( tomcat, start, end);
+		startServer(tomcat, start, end);
 	}
 
-	private void addSSL(Connector connector,SSLProperties sslProperties) {
+	private void addSSL(Connector connector) {
+		SSLProperties sslProperties = serverData.getRootContext().getBean(SSLProperties.class);
 		ProtocolHandler handler = connector.getProtocolHandler();
-		if(handler instanceof AbstractHttp11JsseProtocol){
+		if(sslProperties!= null && handler instanceof AbstractHttp11JsseProtocol){
 			new SSLConfigurationBuilder().build((AbstractHttp11JsseProtocol)handler,sslProperties);
 			connector.setScheme("https");
-			connector.setSecure(true);
-			
-		}
-		
-		
+			connector.setSecure(true);		
+		}		
 	}
 
 	private void startServer( Tomcat httpServer, CompletableFuture start, CompletableFuture end) {
@@ -152,9 +145,9 @@ public class TomcatApplication implements ServerApplication {
 			
 		} catch (Exception e) {
 			
-			logger.error(ErrorCode.SERVER_STARTUP_FAILED_TO_CREATE_ACCESS_LOG.toString() + ": " + e.getMessage());
+			logger.error(InternalErrorCode.SERVER_STARTUP_FAILED_TO_CREATE_ACCESS_LOG.toString() + ": " + e.getMessage());
 			if (e.getCause() != null)
-				logger.error("CAUSED BY: " + ErrorCode.SERVER_STARTUP_FAILED_TO_CREATE_ACCESS_LOG.toString() + ": " + e.getCause().getMessage());
+				logger.error("CAUSED BY: " + InternalErrorCode.SERVER_STARTUP_FAILED_TO_CREATE_ACCESS_LOG.toString() + ": " + e.getCause().getMessage());
 
 		}
 

@@ -11,34 +11,36 @@ import java.util.Optional;
 import org.junit.Before;
 import org.junit.Test;
 
+import com.aol.micro.server.distributed.DistributedMap;
+
 public class ConfigureCouchbaseTest {
 
-	ConfigureCouchbase config;
+    ConfigureCouchbase config;
 
-	@Before
-	public void setUp() throws Exception {
-		config = new ConfigureCouchbase();
-	}
+    @Before
+    public void setUp() throws Exception {
+        config = new ConfigureCouchbase();
+    }
 
-	@Test
-	public void createDistributedCacheMemcachedOff() throws IOException, URISyntaxException {
-		config.setCouchbaseClientEnabled(false);
-		DistributedMapClient<Object> cache = config.simpleCouchbaseClient();
-		assertThat(cache.get("hello"), is(Optional.empty()));
+    @Test
+    public void createDistributedCacheMemcachedOff() throws IOException, URISyntaxException {
+        config.setCouchbaseClientEnabled(false);
+        DistributedMap<Object> cache = config.simpleCouchbaseClient();
+        assertThat(cache.get("hello"), is(Optional.empty()));
 
-	}
+    }
 
-	@Test(expected = NullPointerException.class)
-	public void createDistributedCache() throws IOException, URISyntaxException {
-		memcachedOn();
-		config.simpleCouchbaseClient();
-		fail("Memcache should throw exception");
+    @Test(expected = NullPointerException.class)
+    public void createDistributedCache() throws IOException, URISyntaxException {
+        memcachedOn();
+        config.simpleCouchbaseClient();
+        fail("Memcache should throw exception");
 
-	}
+    }
 
-	private void memcachedOn() {
-		config.setCouchbaseClientEnabled(true);
-		config.setCouchbaseServers(null);
-	}
+    private void memcachedOn() {
+        config.setCouchbaseClientEnabled(true);
+        config.setCouchbaseServers(null);
+    }
 
 }
